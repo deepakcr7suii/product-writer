@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Product Description Writer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Product Description Writer</h1>
+    <p class="subtitle">For online sellers. Powered by AI.</p>
+
+    <label for="product-name">Product Name</label>
+    <input type="text" id="product-name" placeholder="e.g. Wireless Bluetooth Earbuds">
+
+    <label for="features">Key Features (one per line)</label>
+    <textarea id="features" rows="5" placeholder="Noise cancellation&#10;30-hour battery&#10;Waterproof"></textarea>
+
+    <button id="generate-btn">Generate Description</button>
+
+    <div id="output" class="hidden">
+      <h2>Generated Description</h2>
+      <div id="result"></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
