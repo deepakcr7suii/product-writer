@@ -1,3 +1,5 @@
+let loadingInterval = null;
+
 document.getElementById('generate-btn').addEventListener('click', async () => {
   const productName = document.getElementById('product-name').value;
   const features = document.getElementById('features').value;
@@ -11,8 +13,13 @@ document.getElementById('generate-btn').addEventListener('click', async () => {
     return;
   }
 
+  // Reset and show output area
+  result.textContent = '';
+  counter.textContent = '';
+  output.classList.remove('hidden');
+
   btn.disabled = true;
-  btn.textContent = 'Generating...';
+  startLoadingMessages(btn);
 
   try {
     const response = await fetch('/generate', {
@@ -24,12 +31,23 @@ document.getElementById('generate-btn').addEventListener('click', async () => {
       })
     });
 
-    const data = await response.json();
-    result.textContent = data.description;
-    output.classList.remove('hidden');
+    // Read the stream chunk by chunk
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let fullText = '';
 
-    const wordCount = data.description.trim().split(/\s+/).length;
-    const charCount = data.description.length;
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      const chunk = decoder.decode(value, { stream: true });
+      fullText += chunk;
+      result.textContent = fullText;
+    }
+
+    // Update counter with final text
+    const wordCount = fullText.trim().split(/\s+/).length;
+    const charCount = fullText.length;
     counter.textContent = `${wordCount} words · ${charCount} characters`;
 
   } catch (error) {
@@ -37,9 +55,35 @@ document.getElementById('generate-btn').addEventListener('click', async () => {
     console.error(error);
   }
 
+  stopLoadingMessages(btn);
   btn.disabled = false;
-  btn.textContent = 'Generate Description';
 });
+
+function startLoadingMessages(btn) {
+  const messages = [
+    '⚡ Analyzing your product...',
+    '✍️ Crafting the description...',
+    '🎨 Adding creative touches...',
+    '✨ Polishing the final result...',
+    '⏳ Almost there...'
+  ];
+  
+  let index = 0;
+  btn.textContent = messages[0];
+  
+  loadingInterval = setInterval(() => {
+    index = (index + 1) % messages.length;
+    btn.textContent = messages[index];
+  }, 3500);
+}
+
+function stopLoadingMessages(btn) {
+  if (loadingInterval) {
+    clearInterval(loadingInterval);
+    loadingInterval = null;
+  }
+  btn.textContent = 'Generate Description';
+}
 
 document.getElementById('copy-btn').addEventListener('click', () => {
   const result = document.getElementById('result').textContent;
