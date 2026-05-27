@@ -108,3 +108,42 @@ button:disabled {
 .hidden {
   display: none;
 }
+
+.output-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.output-header h2 {
+  margin-bottom: 0;
+}
+
+.copy-btn {
+  width: auto;
+  margin-top: 0;
+  padding: 6px 14px;
+  background: #f0f0f0;
+  color: #333;
+  border: 1px solid #ddd;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.copy-btn:hover {
+  background: #e0e0e0;
+}
+
+.copy-btn.copied {
+  background: #d4edda;
+  color: #155724;
+  border-color: #c3e6cb;
+}
+
+.counter {
+  margin-top: 10px;
+  font-size: 12px;
+  color: #888;
+  text-align: right;
+}
