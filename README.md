@@ -18,12 +18,12 @@ An AI-powered web app that generates compelling product descriptions for online 
 
 **Frontend**
 - HTML5, CSS3, Vanilla JavaScript
-- Streaming Fetch API for real-time responses
+- Fetch API with chunked streaming for real-time responses
 
 **Backend**
 - Python 3.11
 - Flask (web server + REST API)
-- Server-Sent Events (SSE) for streaming
+- Streaming HTTP responses via Flask's `stream_with_context`
 
 **AI/ML**
 - Ollama (local LLM runtime)
@@ -45,10 +45,11 @@ cd product-writer
 
 **2. Install Python dependencies**
 ```bash
-pip install flask requests
+pip install -r requirements.txt
 ```
 
 **3. Install and start Ollama**
+
 Download from [ollama.com](https://ollama.com), then pull the model:
 ```bash
 ollama pull llama3.2
@@ -60,16 +61,19 @@ python app.py
 ```
 
 **5. Open in browser**
+
 Navigate to `http://localhost:5000` and start generating!
 
 ## 🏗️ How It Works
 
+```
 ┌─────────────────┐    HTTP    ┌──────────────┐    HTTP    ┌─────────────┐
 │                 │ ─────────> │              │ ─────────> │             │
 │   Web Browser   │            │ Flask Server │            │   Ollama    │
 │   (Frontend)    │ <───────── │  (Backend)   │ <───────── │  (Llama 3.2)│
 │                 │  Streaming │              │  Streaming │             │
 └─────────────────┘            └──────────────┘            └─────────────┘
+```
 
 1. User fills in product name + features in the browser
 2. Frontend sends data to Flask's `/generate` endpoint
@@ -80,8 +84,10 @@ Navigate to `http://localhost:5000` and start generating!
 
 ## 📁 Project Structure
 
+```
 product-writer/
 ├── app.py                  # Flask backend + Ollama integration
+├── requirements.txt        # Python dependencies
 ├── templates/
 │   └── index.html          # Main UI template
 ├── static/
@@ -89,7 +95,9 @@ product-writer/
 │   └── style.css           # Styling
 ├── screenshots/
 │   └── demo.png            # Demo screenshot
+├── LICENSE
 └── README.md
+```
 
 ## 🎯 Use Cases
 
