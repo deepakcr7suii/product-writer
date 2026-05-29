@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, Response, stream_with_context
 from google import genai
 from dotenv import load_dotenv
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 import os
 
 load_dotenv()
@@ -8,11 +10,19 @@ client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 app = Flask(__name__)
 
+limiter = Limiter(
+    key_func=get_remote_address,
+    app=app,
+    default_limits=["30 per day", "10 per hour"],
+    storage_uri="memory://",
+)
+
 @app.route('/')
 def home():
     return render_template('index.html')
 
 @app.route('/generate', methods=['POST'])
+@limiter.limit("5 per minute")
 def generate():
     data = request.get_json()
     product_name = data.get('product_name')

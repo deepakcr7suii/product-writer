@@ -31,6 +31,18 @@ document.getElementById('generate-btn').addEventListener('click', async () => {
       })
     });
 
+    // Handle non-OK responses BEFORE trying to read the stream
+    if (!response.ok) {
+      if (response.status === 429) {
+        result.textContent = "⏳ You're going too fast! Please wait a minute before trying again.";
+      } else {
+        result.textContent = "Something went wrong. Please try again in a moment.";
+      }
+      stopLoadingMessages(btn);
+      btn.disabled = false;
+      return;
+    }
+
     // Read the stream chunk by chunk
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
